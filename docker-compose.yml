@@ -1,0 +1,54 @@
+version: '3.9'
+
+services:
+  fronend:
+    build: ./vue
+    container_name: frontend
+    ports:
+      - "3000:3000"
+    networks:
+      - appNetwork
+    depends_on:
+      - backend
+      - mysql
+    environment:
+      - VITE_API_BASE_URL=http://backend:8000
+
+  backend:
+    build: .
+    container_name: backend
+    ports:
+      - "8000:8000"
+    networks:
+      - appNetwork
+    depends_on:
+      - mysql
+
+  mysql:
+    image: mysql:8.0.29
+    container_name: mysql
+    command: --init-file /data/application/init.sql
+    volumes:
+        - ./init.sql:/data/application/init.sql
+    networks:
+      - appNetwork
+    restart: always
+    environment:
+      - MYSQL_ALLOW_EMPTY_PASSWORD=true
+  
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: phpmyadmin
+    ports:
+      - 8081:80
+    networks:
+      - appNetwork
+    restart: always
+    environment:
+      PMA_HOST: mysql
+      PMA_PORT: 3306
+      PMA_ARBITRARY: 1
+
+networks:
+  appNetwork:
+    driver: bridge
