@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert -f ../docker-compose.yml
+    kompose.version: 1.26.0 (40646f47)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: fronend
+  name: fronend
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      io.kompose.service: fronend
+  strategy: {}
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose convert -f ../docker-compose.yml
+        kompose.version: 1.26.0 (40646f47)
+      creationTimestamp: null
+      labels:
+        io.kompose.network/app-network: "true"
+        io.kompose.service: fronend
+    spec:
+      containers:
+        - env:
+            - name: VITE_API_BASE_URL
+              value: http://backend:8000
+          image: tesla59/laravel_vue-front:1
+          name: frontend
+          ports:
+            - containerPort: 8080
+          resources: {}
+      restartPolicy: Always
+status: {}
