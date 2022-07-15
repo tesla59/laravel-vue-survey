@@ -7,7 +7,7 @@ services:
     ports:
       - "8080:8080"
     networks:
-      - appNetwork
+      - app-network
     depends_on:
       - backend
       - mysql
@@ -20,7 +20,7 @@ services:
     ports:
       - "8000:8000"
     networks:
-      - appNetwork
+      - app-network
     depends_on:
       - mysql
 
@@ -33,7 +33,7 @@ services:
     volumes:
         - ./init.sql:/data/application/init.sql
     networks:
-      - appNetwork
+      - app-network
     restart: always
     environment:
       - MYSQL_ALLOW_EMPTY_PASSWORD=true
@@ -44,7 +44,7 @@ services:
     ports:
       - 8081:80
     networks:
-      - appNetwork
+      - app-network
     restart: always
     environment:
       PMA_HOST: mysql
@@ -57,8 +57,8 @@ services:
     ports:
       - "6379:6379"
     networks:
-      - appNetwork
+      - app-network
 
 networks:
-  appNetwork:
+  app-network:
     driver: bridge
